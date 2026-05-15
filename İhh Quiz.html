@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>İslami Haftalık Bilgi Yarışması | İHH Quiz</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(145deg, #0b3b2f 0%, #0f4c3a 100%);
+            min-height: 100vh;
+            padding: 2rem 1.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .quiz-container {
+            max-width: 950px;
+            width: 100%;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 2rem;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(210, 180, 70, 0.2);
+            overflow: hidden;
+        }
+
+        .quiz-header {
+            background: linear-gradient(135deg, #1b5e2a 0%, #0f4d2d 100%);
+            padding: 1.8rem 2rem;
+            text-align: center;
+            border-bottom: 4px solid #d4af37;
+        }
+
+        .quiz-header h1 {
+            font-size: 1.9rem;
+            font-weight: 700;
+            color: #ffefc0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .quiz-header h1 i {
+            font-size: 2rem;
+            color: #f5c542;
+        }
+
+        .quiz-header p {
+            color: #e0f2e9;
+            margin-top: 0.5rem;
+            font-weight: 500;
+        }
+
+        .quiz-content {
+            padding: 2rem;
+            background: #fefef7;
+        }
+
+        .question-card {
+            background: #ffffff;
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8dd;
+        }
+
+        .question-text {
+            font-size: 1.65rem;
+            font-weight: 700;
+            color: #1b4d2b;
+            line-height: 1.4;
+            margin-bottom: 0.75rem;
+        }
+
+        .question-badge {
+            display: inline-block;
+            background: #e9f5e6;
+            padding: 0.2rem 1rem;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            color: #1e6b3b;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .option-btn {
+            background: #f9faf6;
+            border: 2px solid #cfdec6;
+            border-radius: 1.2rem;
+            padding: 1rem 1.5rem;
+            text-align: left;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #1f3b2c;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .option-prefix {
+            background: #d9e6cf;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            color: #1e6b3b;
+            font-size: 1rem;
+        }
+
+        .option-btn:hover:not(.disabled-opt) {
+            background: #ecf7e5;
+            border-color: #7da06e;
+            transform: translateY(-2px);
+        }
+
+        .disabled-opt {
+            cursor: default;
+            opacity: 0.9;
+            background: #f1f3ec;
+        }
+
+        .results-area {
+            background: #f4f9f0;
+            border-radius: 1.2rem;
+            padding: 1.2rem 1.5rem;
+            margin-top: 1.8rem;
+            border-left: 6px solid #2c8c4a;
+            animation: fadeInUp 0.3s ease;
+        }
+
+        .top-three-area {
+            background: #fef7e0;
+            border-radius: 1.2rem;
+            padding: 1rem 1.5rem;
+            margin-top: 1.5rem;
+            border-left: 6px solid #d4af37;
+        }
+
+        .top-three-title {
+            font-weight: 700;
+            color: #b97f10;
+            margin-bottom: 0.8rem;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .top-three-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .top-three-item {
+            background: white;
+            padding: 8px 12px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 500;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .rank-badge {
+            width: 30px;
+            height: 30px;
+            background: #d4af37;
+            color: #2c5e2d;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stat-item {
+            margin-bottom: 0.9rem;
+        }
+
+        .stat-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #2d4a36;
+        }
+
+        .progress-bar-bg {
+            background: #dde4d6;
+            border-radius: 20px;
+            height: 12px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: #2e9c5b;
+            width: 0%;
+            height: 100%;
+            border-radius: 20px;
+            transition: width 0.3s ease;
+        }
+
+        .total-votes {
+            margin-top: 12px;
+            font-size: 0.8rem;
+            color: #6a6f5e;
+            font-weight: 500;
+            text-align: center;
+            border-top: 1px solid #d2e0c7;
+            padding-top: 10px;
+        }
+
+        .vote-message {
+            margin-top: 1rem;
+            background: #e9f3e3;
+            padding: 0.7rem;
+            border-radius: 50px;
+            text-align: center;
+            color: #1e6b3b;
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+
+        .toast-message {
+            position: fixed;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1f5c3a;
+            color: #ffefcf;
+            padding: 12px 24px;
+            border-radius: 60px;
+            font-weight: 600;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            z-index: 1000;
+            font-size: 0.9rem;
+            backdrop-filter: blur(4px);
+            border-left: 5px solid #f5b642;
+        }
+
+        .admin-toggle {
+            margin-top: 1rem;
+            text-align: center;
+            padding-top: 1rem;
+            border-top: 1px dashed #cbdcc0;
+        }
+
+        .admin-btn {
+            background: none;
+            border: 1px solid #afc7a3;
+            background: #f0f5eb;
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #2c6e44;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .admin-panel {
+            background: #fefcf0;
+            border-radius: 1.2rem;
+            padding: 1.2rem;
+            margin-top: 1rem;
+            border: 1px solid #d4c8a5;
+        }
+
+        .admin-panel input, .admin-panel textarea, .admin-panel select {
+            width: 100%;
+            padding: 10px 12px;
+            margin: 8px 0 12px 0;
+            border-radius: 14px;
+            border: 1px solid #cbdbb9;
+            background: white;
+            font-size: 0.9rem;
+        }
+
+        .admin-panel button {
+            background: #257c46;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #3b6e4b;
+        }
+
+        footer {
+            font-size: 0.7rem;
+            text-align: center;
+            background: #eef3e9;
+            padding: 1rem;
+            color: #537c5e;
+        }
+
+        .name-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+        .name-modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 2rem;
+            text-align: center;
+            max-width: 350px;
+        }
+        .name-modal-content input {
+            padding: 12px;
+            width: 100%;
+            margin: 15px 0;
+            border-radius: 40px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container" id="appRoot">
+    <div class="quiz-header">
+        <h1><i class="fas fa-mosque"></i> İHH Haftalık Bilgi Yarışması <i class="fas fa-leaf"></i></h1>
+        <p>Doğru cevabı bilen ilk 3 kişi listelenecektir.</p>
+    </div>
+    <div class="quiz-content" id="quizContent">
+        <div id="dynamicArea">
+            <div class="loading"><i class="fas fa-spinner fa-pulse"></i> Yükleniyor...</div>
+        </div>
+        <div class="admin-toggle">
+            <button id="adminTriggerBtn" class="admin-btn"><i class="fas fa-user-lock"></i> Yönetici Paneli</button>
+        </div>
+        <div id="adminPanelContainer" style="display: none;"></div>
+    </div>
+    <footer>
+        <i class="fas fa-chart-simple"></i> Sonuçlar, soruyu cevapladıktan sonra gösterilir
+    </footer>
+</div>
+
+<script type="importmap">
+    {
+        "imports": {
+            "firebase/app": "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js",
+            "firebase/firestore": "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js",
+            "firebase/analytics": "https://www.gstatic.com/firebasejs/10.13.1/firebase-analytics.js"
+        }
+    }
+</script>
+
+<script type="module">
+    import { initializeApp } from "firebase/app";
+    import { getAnalytics } from "firebase/analytics";
+    import { 
+        getFirestore, 
+        collection, 
+        doc, 
+        getDocs, 
+        query, 
+        where, 
+        runTransaction, 
+        serverTimestamp, 
+        onSnapshot,
+        writeBatch,
+        setDoc
+    } from "firebase/firestore";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyBQptrDTtmLwgw2fZrulKC4EVq_1hXod6A",
+        authDomain: "ihhquiz-daf32.firebaseapp.com",
+        projectId: "ihhquiz-daf32",
+        storageBucket: "ihhquiz-daf32.firebasestorage.app",
+        messagingSenderId: "104206482341",
+        appId: "1:104206482341:web:9b2539d3cc7262c07bc64c",
+        measurementId: "G-710NPR5DP4"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const db = getFirestore(app);
+
+    // Kullanıcı ID ve isim
+    function getUserId() {
+        let uid = localStorage.getItem("quiz_user_id");
+        if (!uid) {
+            uid = crypto.randomUUID ? crypto.randomUUID() : 'user_' + Date.now() + '_' + Math.random().toString(36);
+            localStorage.setItem("quiz_user_id", uid);
+        }
+        return uid;
+    }
+
+    let currentUserId = getUserId();
+    let currentUserName = localStorage.getItem("quiz_user_name");
+
+    async function showNameModal() {
+        return new Promise((resolve) => {
+            const modalDiv = document.createElement('div');
+            modalDiv.className = 'name-modal';
+            modalDiv.innerHTML = `
+                <div class="name-modal-content">
+                    <i class="fas fa-user-circle" style="font-size: 3rem; color: #1e6b3b;"></i>
+                    <h3>İsminizi giriniz</h3>
+                    <input type="text" id="userNameInput" placeholder="Adınız Soyadınız" autocomplete="off">
+                    <button id="saveNameBtn" style="background:#257c46; color:white; border:none; padding:10px 24px; border-radius:40px;">Başla</button>
+                </div>
+            `;
+            document.body.appendChild(modalDiv);
+            const input = modalDiv.querySelector('#userNameInput');
+            const btn = modalDiv.querySelector('#saveNameBtn');
+            btn.onclick = () => {
+                const name = input.value.trim();
+                if (name === "") {
+                    alert("Lütfen isminizi girin.");
+                    return;
+                }
+                currentUserName = name;
+                localStorage.setItem("quiz_user_name", name);
+                modalDiv.remove();
+                resolve(name);
+            };
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') btn.click();
+            });
+        });
+    }
+
+    if (!currentUserName) {
+        await showNameModal();
+    }
+
+    let activeQuestionDoc = null;
+    let userAlreadyVoted = false;
+    let unsubscribeQuestion = null;
+
+    const dynamicArea = document.getElementById("dynamicArea");
+    const adminTriggerBtn = document.getElementById("adminTriggerBtn");
+    const adminPanelContainer = document.getElementById("adminPanelContainer");
+    let adminPasswordChecked = false;
+    let adminPanelVisible = false;
+
+    function checkAdminAccess() {
+        if (adminPasswordChecked) return true;
+        const pwd = prompt("Yönetici erişimi için şifre:", "");
+        if (pwd === "ihhadmin2025") {
+            adminPasswordChecked = true;
+            return true;
+        } else {
+            alert("Geçersiz şifre!");
+            return false;
+        }
+    }
+
+    function renderAdminPanel() {
+        if (!adminPanelVisible) {
+            adminPanelContainer.style.display = "none";
+            adminPanelContainer.innerHTML = "";
+            return;
+        }
+        adminPanelContainer.style.display = "block";
+        adminPanelContainer.innerHTML = `
+            <div class="admin-panel">
+                <h4><i class="fas fa-crown"></i> Yeni Haftalık Soru Ekle</h4>
+                <label>Soru metni:</label>
+                <input type="text" id="newQuestionText" placeholder="Örn: Kur'an-ı Kerim'de adı geçen peygamberlerden biri?" />
+                <label>Seçenek A:</label>
+                <input type="text" id="newOpt0" placeholder="Cevap 1" />
+                <label>Seçenek B:</label>
+                <input type="text" id="newOpt1" placeholder="Cevap 2" />
+                <label>Seçenek C:</label>
+                <input type="text" id="newOpt2" placeholder="Cevap 3" />
+                <label>Seçenek D:</label>
+                <input type="text" id="newOpt3" placeholder="Cevap 4" />
+                <label>Doğru Cevap:</label>
+                <select id="correctAnswerSelect">
+                    <option value="0">A) Seçenek A</option>
+                    <option value="1">B) Seçenek B</option>
+                    <option value="2">C) Seçenek C</option>
+                    <option value="3">D) Seçenek D</option>
+                </select>
+                <button id="publishQuestionBtn"><i class="fas fa-upload"></i> Soruyu Yayınla (Tüm eski veriler silinir)</button>
+                <p style="font-size:12px; margin-top:10px;"><i class="fas fa-info-circle"></i> Yeni soru eklenince önceki TÜM sorular, cevaplar ve ilk 3 listesi silinir.</p>
+            </div>
+        `;
+        const opt0 = document.getElementById('newOpt0');
+        const opt1 = document.getElementById('newOpt1');
+        const opt2 = document.getElementById('newOpt2');
+        const opt3 = document.getElementById('newOpt3');
+        const select = document.getElementById('correctAnswerSelect');
+        const updateSelectOptions = () => {
+            select.options[0].text = `A) ${opt0?.value || 'Seçenek A'}`;
+            select.options[1].text = `B) ${opt1?.value || 'Seçenek B'}`;
+            select.options[2].text = `C) ${opt2?.value || 'Seçenek C'}`;
+            select.options[3].text = `D) ${opt3?.value || 'Seçenek D'}`;
+        };
+        opt0?.addEventListener('input', updateSelectOptions);
+        opt1?.addEventListener('input', updateSelectOptions);
+        opt2?.addEventListener('input', updateSelectOptions);
+        opt3?.addEventListener('input', updateSelectOptions);
+        updateSelectOptions();
+
+        document.getElementById("publishQuestionBtn")?.addEventListener("click", async () => {
+            const questionText = document.getElementById("newQuestionText").value.trim();
+            const options = [
+                document.getElementById("newOpt0").value.trim(),
+                document.getElementById("newOpt1").value.trim(),
+                document.getElementById("newOpt2").value.trim(),
+                document.getElementById("newOpt3").value.trim()
+            ];
+            const correctAnswer = parseInt(document.getElementById("correctAnswerSelect").value, 10);
+            if (!questionText) { alert("Soru metni boş olamaz!"); return; }
+            if (options.some(opt => opt === "")) { alert("Tüm 4 seçeneği doldurun!"); return; }
+            
+            await clearAllOldData();
+            await createNewWeeklyQuestion(questionText, options, correctAnswer);
+            alert("Yeni haftalık soru başarıyla yayınlandı! Eski tüm veriler silindi.");
+            if (unsubscribeQuestion) unsubscribeQuestion();
+            loadActiveQuestion();
+            adminPanelVisible = false;
+            adminPanelContainer.style.display = "none";
+        });
+    }
+
+    async function clearAllOldData() {
+        const questionsRef = collection(db, "questions");
+        const questionsSnap = await getDocs(questionsRef);
+        const votesRef = collection(db, "votes");
+        const votesSnap = await getDocs(votesRef);
+        const batch = writeBatch(db);
+        questionsSnap.forEach(docSnap => { batch.delete(doc(db, "questions", docSnap.id)); });
+        votesSnap.forEach(docSnap => { batch.delete(doc(db, "votes", docSnap.id)); });
+        await batch.commit();
+    }
+
+    async function createNewWeeklyQuestion(questionText, optionsArr, correctAnswerIdx) {
+        const questionsRef = collection(db, "questions");
+        const newDocRef = doc(questionsRef);
+        await setDoc(newDocRef, {
+            questionText: questionText,
+            options: optionsArr,
+            answerCounts: [0, 0, 0, 0],
+            totalVotes: 0,
+            correctAnswer: correctAnswerIdx,
+            topThree: [], // Sadece { name, userId } içerecek, timestamp yok
+            active: true,
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp()
+        });
+    }
+
+    async function hasUserVoted(questionId) {
+        if (!questionId) return false;
+        const votesRef = collection(db, "votes");
+        const q = query(votesRef, where("userId", "==", currentUserId), where("questionId", "==", questionId));
+        const snapshot = await getDocs(q);
+        return !snapshot.empty;
+    }
+
+    async function submitVote(selectedIndex, questionDoc) {
+        const questionId = questionDoc.id;
+        const questionRef = doc(db, "questions", questionId);
+        
+        if (userAlreadyVoted) {
+            showToast("Zaten bu soruyu cevapladınız!", "warning");
+            return false;
+        }
+        
+        try {
+            let finalRank = null;
+            let isCorrect = false;
+            await runTransaction(db, async (transaction) => {
+                const qSnapshot = await transaction.get(questionRef);
+                if (!qSnapshot.exists()) throw new Error("Soru mevcut değil");
+                const data = qSnapshot.data();
+                if (!data.active) throw new Error("Aktif soru değil");
+                
+                const correctAns = data.correctAnswer;
+                isCorrect = (selectedIndex === correctAns);
+                
+                // Cevap istatistiklerini güncelle
+                const newCounts = [...data.answerCounts];
+                newCounts[selectedIndex] = (newCounts[selectedIndex] || 0) + 1;
+                const newTotalVotes = (data.totalVotes || 0) + 1;
+                
+                // Oy kaydı
+                const voteRef = doc(collection(db, "votes"));
+                transaction.set(voteRef, {
+                    userId: currentUserId,
+                    userName: currentUserName,
+                    questionId: questionId,
+                    answerIndex: selectedIndex,
+                    isCorrect: isCorrect,
+                    timestamp: serverTimestamp(),
+                });
+                
+                // Eğer doğru cevap ise ve kullanıcı daha önce ilk 3'te yoksa ekle (timestamp yok)
+                let newTopThree = [...(data.topThree || [])];
+                if (isCorrect) {
+                    const alreadyExists = newTopThree.some(item => item.userId === currentUserId);
+                    if (!alreadyExists && newTopThree.length < 3) {
+                        const newEntry = {
+                            name: currentUserName,
+                            userId: currentUserId
+                            // timestamp KALDIRILDI, Firestore array içinde serverTimestamp desteklemez
+                        };
+                        newTopThree.push(newEntry);
+                        finalRank = newTopThree.length;
+                    }
+                }
+                
+                transaction.update(questionRef, {
+                    answerCounts: newCounts,
+                    totalVotes: newTotalVotes,
+                    topThree: newTopThree,
+                    updatedAt: serverTimestamp()
+                });
+            });
+            
+            if (isCorrect && finalRank !== null && finalRank <= 3) {
+                showToast(`🎉 Tebrikler! İlk ${finalRank}. doğru cevap veren sizsiniz! 🎉`, "success");
+            } else if (isCorrect) {
+                showToast(`✅ Doğru cevap! Ancak ilk 3'e giremediniz.`, "info");
+            } else {
+                showToast(`❌ Maalesef yanlış cevap. Doğru cevabı görmek için sonuçları inceleyin.`, "info");
+            }
+            userAlreadyVoted = true;
+            await loadActiveQuestion();
+            return true;
+        } catch (error) {
+            console.error("Vote error:", error);
+            showToast("Bir hata oluştu: " + error.message, "error");
+            return false;
+        }
+    }
+
+    function showToast(message, type = "info") {
+        let existing = document.querySelector(".toast-message");
+        if (existing) existing.remove();
+        const toast = document.createElement("div");
+        toast.className = "toast-message";
+        toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-info-circle'}"></i> ${message}`;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 4000);
+    }
+
+    function renderQuizUI(questionDoc, alreadyVoted) {
+        if (!questionDoc) {
+            dynamicArea.innerHTML = `<div class="loading"><i class="fas fa-question-circle"></i> Aktif soru bulunamadı. Lütfen yöneticiden soru eklemesini isteyin.</div>`;
+            return;
+        }
+        const data = questionDoc.data;
+        const options = data.options;
+        const answerCounts = data.answerCounts || [0,0,0,0];
+        const totalVotes = data.totalVotes || 0;
+        const questionText = data.questionText;
+        const topThree = data.topThree || [];
+        const correctAnswerIdx = data.correctAnswer;
+        
+        let optionsHtml = `<div class="options-grid">`;
+        if (!alreadyVoted) {
+            options.forEach((opt, idx) => {
+                const prefix = String.fromCharCode(65+idx);
+                optionsHtml += `
+                    <button class="option-btn" data-opt-index="${idx}">
+                        <span class="option-prefix">${prefix}</span>
+                        <span>${opt}</span>
+                    </button>
+                `;
+            });
+            optionsHtml += `</div>`;
+            const fullHtml = `
+                <div class="question-card">
+                    <div class="question-badge"><i class="fas fa-calendar-week"></i> Haftanın Sorusu</div>
+                    <div class="question-text">${escapeHtml(questionText)}</div>
+                    ${optionsHtml}
+                    <div class="vote-message" style="background:#f1f5ec;"><i class="fas fa-lock"></i> Sonuçlar, soruyu cevapladıktan sonra gösterilecektir.</div>
+                </div>
+            `;
+            dynamicArea.innerHTML = fullHtml;
+            document.querySelectorAll(".option-btn[data-opt-index]").forEach(btn => {
+                btn.addEventListener("click", async (e) => {
+                    const idx = parseInt(btn.dataset.optIndex, 10);
+                    if (isNaN(idx)) return;
+                    const allBtns = document.querySelectorAll(".option-btn");
+                    allBtns.forEach(b => b.style.pointerEvents = "none");
+                    await submitVote(idx, questionDoc);
+                    allBtns.forEach(b => b.style.pointerEvents = "auto");
+                });
+            });
+        } else {
+            // Oy verildi: sonuçları ve ilk 3'ü göster
+            optionsHtml = `<div class="options-grid">`;
+            options.forEach((opt, idx) => {
+                const prefix = String.fromCharCode(65+idx);
+                const isCorrectOption = (idx === correctAnswerIdx);
+                optionsHtml += `
+                    <div class="option-btn disabled-opt" style="cursor:default; background:#eef3e9;">
+                        <span class="option-prefix" style="background:#bdd9ac;">${prefix}</span>
+                        <span>${opt}</span> 
+                        ${isCorrectOption ? '<i class="fas fa-check-circle" style="margin-left:auto; color:#2c8c4a;"></i>' : ''}
+                    </div>
+                `;
+            });
+            optionsHtml += `</div><div class="vote-message"><i class="fas fa-check-double"></i> Bu haftaki soruyu cevapladınız. İşte sonuçlar:</div>`;
+            
+            let resultsHtml = `
+                <div class="results-area">
+                    <div class="results-title"><i class="fas fa-chart-pie"></i> Anlık Sonuçlar (${totalVotes} kişi cevapladı)</div>
+                    ${options.map((opt, idx) => {
+                        const count = answerCounts[idx] || 0;
+                        const percent = totalVotes === 0 ? 0 : ((count / totalVotes) * 100).toFixed(1);
+                        return `
+                            <div class="stat-item">
+                                <div class="stat-label">
+                                    <span><strong>${String.fromCharCode(65+idx)}.</strong> ${opt} ${idx === correctAnswerIdx ? '✅ (Doğru Cevap)' : ''}</span>
+                                    <span>${count} kişi (%${percent})</span>
+                                </div>
+                                <div class="progress-bar-bg"><div class="progress-fill" style="width: ${percent}%;"></div></div>
+                            </div>
+                        `;
+                    }).join('')}
+                    <div class="total-votes"><i class="fas fa-users"></i> Toplam katılımcı: ${totalVotes}</div>
+                </div>
+            `;
+            
+            let topThreeHtml = '';
+            if (topThree.length > 0) {
+                topThreeHtml = `
+                    <div class="top-three-area">
+                        <div class="top-three-title"><i class="fas fa-trophy"></i> İlk Doğru Cevap Verenler</div>
+                        <div class="top-three-list">
+                            ${topThree.map((item, idx) => `
+                                <div class="top-three-item">
+                                    <span class="rank-badge">${idx+1}</span>
+                                    <span><strong>${escapeHtml(item.name)}</strong></span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            } else {
+                topThreeHtml = `<div class="top-three-area"><div class="top-three-title"><i class="fas fa-info-circle"></i> Henüz doğru cevap veren olmadı.</div></div>`;
+            }
+            
+            const fullHtml = `
+                <div class="question-card">
+                    <div class="question-badge"><i class="fas fa-calendar-week"></i> Haftanın Sorusu</div>
+                    <div class="question-text">${escapeHtml(questionText)}</div>
+                    ${optionsHtml}
+                    ${resultsHtml}
+                    ${topThreeHtml}
+                </div>
+            `;
+            dynamicArea.innerHTML = fullHtml;
+        }
+    }
+    
+    function escapeHtml(str) {
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+    
+    async function loadActiveQuestion() {
+        if (unsubscribeQuestion) unsubscribeQuestion();
+        const questionsRef = collection(db, "questions");
+        const activeQuery = query(questionsRef, where("active", "==", true));
+        unsubscribeQuestion = onSnapshot(activeQuery, async (snapshot) => {
+            if (snapshot.empty) {
+                activeQuestionDoc = null;
+                userAlreadyVoted = false;
+                renderQuizUI(null, false);
+                return;
+            }
+            const docSnap = snapshot.docs[0];
+            const questionData = { id: docSnap.id, data: docSnap.data() };
+            activeQuestionDoc = questionData;
+            const voted = await hasUserVoted(questionData.id);
+            userAlreadyVoted = voted;
+            renderQuizUI(activeQuestionDoc, userAlreadyVoted);
+        }, (error) => {
+            console.error("Snapshot error:", error);
+            dynamicArea.innerHTML = `<div class="loading">Veri bağlantı hatası: ${error.message}</div>`;
+        });
+    }
+    
+    adminTriggerBtn.addEventListener("click", async () => {
+        const access = checkAdminAccess();
+        if (!access) return;
+        if (adminPanelVisible) {
+            adminPanelVisible = false;
+            adminPanelContainer.style.display = "none";
+            adminPanelContainer.innerHTML = "";
+        } else {
+            adminPanelVisible = true;
+            renderAdminPanel();
+        }
+    });
+    
+    loadActiveQuestion();
+</script>
+</body>
+</html>
